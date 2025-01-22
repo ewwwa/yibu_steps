@@ -1,4 +1,4 @@
-// File: /Users/evaanguita/Development/event/app/layout.tsx
+// File: /Users/evaanguita/Development/multi-step-event-planner/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
