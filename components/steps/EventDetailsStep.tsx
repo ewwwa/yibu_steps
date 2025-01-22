@@ -335,6 +335,7 @@ export function EventDetailsStep({
                         setRegistrationCalendarOpen(false)
                       }
                     }}
+                    disabled={(date) => date < new Date()}
                     numberOfMonths={2}
                     defaultMonth={eventDetails.registrationStart || new Date()}
                     initialFocus
@@ -681,6 +682,7 @@ export function EventDetailsStep({
                       setRegistrationCalendarOpen(false)
                     }
                   }}
+                  disabled={(date) => date < new Date()}
                   numberOfMonths={2}
                   defaultMonth={eventDetails.registrationStart || new Date()}
                   initialFocus

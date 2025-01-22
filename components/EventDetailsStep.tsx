@@ -80,9 +80,6 @@ export function EventDetailsStep({
             <CardTitle className="text-white font-bold">Event Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="w-full bg-green-500 p-4 text-white text-center rounded-md">
-              Temporary Green Element in Column 1
-            </div>
             <div className="space-y-2">
               <Label htmlFor="eventName" className="text-white font-semibold">
                 Name
@@ -338,6 +335,7 @@ export function EventDetailsStep({
                         setRegistrationCalendarOpen(false)
                       }
                     }}
+                    disabled={(date) => date < new Date()}
                     numberOfMonths={2}
                     defaultMonth={eventDetails.registrationStart || new Date()}
                     initialFocus
@@ -424,9 +422,6 @@ export function EventDetailsStep({
           <CardTitle className="text-white font-bold">Event Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="w-full bg-green-500 p-4 text-white text-center rounded-md">
-            Temporary Green Element in Column 1
-          </div>
           <FormField
             control={form.control}
             name="eventName"
@@ -687,6 +682,7 @@ export function EventDetailsStep({
                       setRegistrationCalendarOpen(false)
                     }
                   }}
+                  disabled={(date) => date < new Date()}
                   numberOfMonths={2}
                   defaultMonth={eventDetails.registrationStart || new Date()}
                   initialFocus
