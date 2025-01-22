@@ -2223,6 +2223,10 @@ video {
   opacity: 0.5;
 }
 
+.disabled\:hover\:bg-transparent:hover:disabled {
+  background-color: transparent;
+}
+
 .group\/menu-item:focus-within .group-focus-within\/menu-item\:opacity-100 {
   opacity: 1;
 }
