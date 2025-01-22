@@ -130,7 +130,11 @@ export function EventDetailsStep({
                         setCalendarOpen(false)
                       }
                     }}
-                    disabled={(date) => date <= new Date() || date < new Date("1900-01-01")}
+                    disabled={(date) => {
+                      const today = new Date()
+                      today.setHours(0, 0, 0, 0)
+                      return date <= today
+                    }}
                     initialFocus
                     className="rounded-md border-0 bg-[#1A1E2E]"
                     weekStartsOn={1}
@@ -148,12 +152,12 @@ export function EventDetailsStep({
                       head_cell: "text-white/60 rounded-md w-9 font-normal text-[0.8rem]",
                       row: "flex w-full mt-2",
                       cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-[#FF6B2C]",
-                      day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10",
-                      day_today: "bg-transparent border border-[#2A3142]",
+                      day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10 disabled:hover:bg-transparent",
+                      day_today: "bg-[#1A1E2E] text-white border-2 border-[#FF6B2C]",
                       day_selected:
                         "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
                       day_outside: "text-white/40 opacity-50",
-                      day_disabled: "text-white/40 opacity-50",
+                      day_disabled: "text-white/40 opacity-50 cursor-not-allowed",
                       day_hidden: "invisible",
                     }}
                     components={{
@@ -335,9 +339,13 @@ export function EventDetailsStep({
                         setRegistrationCalendarOpen(false)
                       }
                     }}
-                    disabled={(date) => date < new Date()}
                     numberOfMonths={2}
                     defaultMonth={eventDetails.registrationStart || new Date()}
+                    disabled={(date) => {
+                      const today = new Date()
+                      today.setHours(0, 0, 0, 0)
+                      return date <= today
+                    }}
                     initialFocus
                     className="rounded-md border-0 bg-[#1A1E2E]"
                     weekStartsOn={1}
@@ -356,11 +364,11 @@ export function EventDetailsStep({
                       row: "flex w-full mt-2",
                       cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-[#FF6B2C]",
                       day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10",
-                      day_today: "bg-transparent border border-[#2A3142]",
+                      day_today: "bg-[#1A1E2E] text-white border-2 border-[#FF6B2C]",
                       day_selected:
                         "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
                       day_outside: "text-white/40 opacity-50",
-                      day_disabled: "text-white/40 opacity-50",
+                      day_disabled: "text-white/40 opacity-50 cursor-not-allowed",
                       day_range_middle: "aria-selected:bg-[#CC4400] aria-selected:text-white",
                       day_hidden: "invisible",
                     }}
@@ -477,7 +485,11 @@ export function EventDetailsStep({
                       setCalendarOpen(false)
                     }
                   }}
-                  disabled={(date) => date <= new Date() || date < new Date("1900-01-01")}
+                  disabled={(date) => {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    return date <= today
+                  }}
                   initialFocus
                   className="rounded-md border-0 bg-[#1A1E2E]"
                   weekStartsOn={1}
@@ -495,12 +507,12 @@ export function EventDetailsStep({
                     head_cell: "text-white/60 rounded-md w-9 font-normal text-[0.8rem]",
                     row: "flex w-full mt-2",
                     cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-[#FF6B2C]",
-                    day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10",
-                    day_today: "bg-transparent border border-[#2A3142]",
+                    day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10 disabled:hover:bg-transparent",
+                    day_today: "bg-[#1A1E2E] text-white border-2 border-[#FF6B2C]",
                     day_selected:
                       "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
                     day_outside: "text-white/40 opacity-50",
-                    day_disabled: "text-white/40 opacity-50",
+                    day_disabled: "text-white/40 opacity-50 cursor-not-allowed",
                     day_hidden: "invisible",
                   }}
                   components={{
@@ -682,9 +694,225 @@ export function EventDetailsStep({
                       setRegistrationCalendarOpen(false)
                     }
                   }}
-                  disabled={(date) => date < new Date()}
                   numberOfMonths={2}
                   defaultMonth={eventDetails.registrationStart || new Date()}
+                  disabled={(date) => {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    return date <= today
+                  }}
+                  initialFocus
+                  className="rounded-md border-0 bg-[#1A1E2E]"
+                  weekStartsOn={1}
+                  classNames={{
+                    months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4sm:space-y-0",
+                    month: "space-y-4",
+                    caption: "flex justify-center pt-1 relative items-center text-white",
+                    caption_label: "text-sm font-medium",
+                    nav: "space-x-1 flex items-center",
+                    nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 text-white",
+                    nav_button_previous: "absolute left-1",
+                    nav_button_next: "absolute right-1",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "flex",
+                    head_cell: "text-white/60 rounded-md w-9 font-normal text-[0.8rem]",
+                    row: "flex w-full mt-2",
+                    cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-[#FF6B2C]",
+                    day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10 disabled:hover:bg-transparent",
+                    day_today: "bg-[#1A1E2E] text-white border-2 border-[#FF6B2C]",
+                    day_selected:
+                      "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
+                    day_outside: "text-white/40 opacity-50",
+                    day_disabled: "text-white/40 opacity-50 cursor-not-allowed",
+                    day_range_middle: "aria-selected:bg-[#CC4400] aria-selected:text-white",
+                    day_hidden: "invisible",
+                  }}
+                  components={{
+                    IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
+                    IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+            {errors.eventDate && <p className="text-red-500 text-sm mt-1">{errors.eventDate}</p>}
+          </div>
+          <div className="relative">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="startTime" className="text-white font-semibold">
+                  Start Time
+                </Label>
+                <div className="relative" ref={startTimeRef}>
+                  <Input
+                    id="startTime"
+                    value={eventDetails.startTime}
+                    readOnly
+                    className="bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40 cursor-pointer rounded-md"
+                    onClick={() => setStartTimeOpen(!startTimeOpen)}
+                    placeholder="E.g., 10:00"
+                  />
+                  <Clock className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 h-5 w-5 pointer-events-none" />
+                  {startTimeOpen && (
+                    <div className="absolute z-10 top-full mt-1 w-[320px] bg-[#1A1E2E] border border-white/10 rounded-md p-2">
+                      <div className="grid grid-cols-4 gap-2">
+                        <div className="col-span-3">
+                          <div className="text-white font-semibold mb-2">Hours</div>
+                          <div className="grid grid-cols-3 gap-1">
+                            {generateHourOptions().map((column, colIndex) => (
+                              <div key={colIndex} className="flex flex-col">
+                                {column.map((hour) => (
+                                  <button
+                                    key={hour}
+                                    className={cn(
+                                      "px-2 py-1 text-white hover:bg-white/10 rounded",
+                                      eventDetails.startTime?.startsWith(hour) && "bg-[#FF6B2C]",
+                                    )}
+                                    onClick={() =>
+                                      handleTimeChange("start", hour, eventDetails.startTime?.split(":")[1] || "00")
+                                    }
+                                  >
+                                    {hour}
+                                  </button>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-white font-semibold mb-2">Minutes</div>
+                          <div className="flex flex-col">
+                            {generateMinuteOptions().map((minute) => (
+                              <button
+                                key={minute}
+                                className={cn(
+                                  "px-2 py-1 text-white hover:bg-white/10 rounded",
+                                  eventDetails.startTime?.endsWith(minute) && "bg-[#FF6B2C]",
+                                )}
+                                onClick={() =>
+                                  handleTimeChange("start", eventDetails.startTime?.split(":")[0] || "00", minute)
+                                }
+                              >
+                                {minute}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="endTime" className="text-white font-semibold">
+                  End Time
+                </Label>
+                <div className="relative" ref={endTimeRef}>
+                  <Input
+                    id="endTime"
+                    value={eventDetails.endTime}
+                    readOnly
+                    className="bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40 cursor-pointer rounded-md"
+                    onClick={() => setEndTimeOpen(!endTimeOpen)}
+                    placeholder="E.g., 4:00"
+                  />
+                  <Clock className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 h-5 w-5 pointer-events-none" />
+                  {endTimeOpen && (
+                    <div className="absolute z-[100] top-full mt-1 w-[320px] bg-[#1A1E2E] border border-white/10 rounded-md p-2">
+                      <div className="grid grid-cols-4 gap-2">
+                        <div className="col-span-3">
+                          <div className="text-white font-semibold mb-2">Hours</div>
+                          <div className="grid grid-cols-3 gap-1">
+                            {generateHourOptions().map((column, colIndex) => (
+                              <div key={colIndex} className="flex flex-col">
+                                {column.map((hour) => (
+                                  <button
+                                    key={hour}
+                                    className={cn(
+                                      "px-2 py-1 text-white hover:bg-white/10 rounded",
+                                      eventDetails.endTime?.startsWith(hour) && "bg-[#FF6B2C]",
+                                    )}
+                                    onClick={() =>
+                                      handleTimeChange("end", hour, eventDetails.endTime?.split(":")[1] || "00")
+                                    }
+                                  >
+                                    {hour}
+                                  </button>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-white font-semibold mb-2">Minutes</div>
+                          <div className="flex flex-col">
+                            {generateMinuteOptions().map((minute) => (
+                              <button
+                                key={minute}
+                                className={cn(
+                                  "px-2 py-1 text-white hover:bg-white/10 rounded",
+                                  eventDetails.endTime?.endsWith(minute) && "bg-[#FF6B2C]",
+                                )}
+                                onClick={() =>
+                                  handleTimeChange("end", eventDetails.endTime?.split(":")[0] || "00", minute)
+                                }
+                              >
+                                {minute}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          {errors.endTime && <p className="text-red-500 text-sm mt-1">{errors.endTime}</p>}
+          <div className="space-y-2 relative z-0">
+            <Label htmlFor="registrationTime" className="text-white font-semibold">
+              Registration Period
+            </Label>
+            <Popover open={registrationCalendarOpen} onOpenChange={setRegistrationCalendarOpen}>
+              <PopoverTrigger asChild>
+                <div className="relative cursor-pointer">
+                  <Input
+                    id="registrationTime"
+                    value={
+                      eventDetails.registrationStart
+                        ? `${format(eventDetails.registrationStart, "dd/MM/yy")}${eventDetails.registrationEnd ? ` to ${format(eventDetails.registrationEnd, "dd/MM/yy")}` : " to..."}`
+                        : ""
+                    }
+                    readOnly
+                    className="bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40 pl-3 cursor-pointer rounded-md"
+                    placeholder="Select registration start and end dates"
+                  />
+                  <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 h-5 w-5 pointer-events-none" />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-white/10" align="start">
+                <Calendar
+                  mode="range"
+                  selected={{
+                    from: eventDetails.registrationStart,
+                    to: eventDetails.registrationEnd,
+                  }}
+                  onSelect={(range) => {
+                    handleChange({
+                      registrationStart: range?.from,
+                      registrationEnd: range?.to,
+                    })
+                    if (range?.from && range?.to) {
+                      setRegistrationCalendarOpen(false)
+                    }
+                  }}
+                  numberOfMonths={2}
+                  defaultMonth={eventDetails.registrationStart || new Date()}
+                  disabled={(date) => {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    return date <= today
+                  }}
                   initialFocus
                   className="rounded-md border-0 bg-[#1A1E2E]"
                   weekStartsOn={1}
@@ -702,12 +930,12 @@ export function EventDetailsStep({
                     head_cell: "text-white/60 rounded-md w-9 font-normal text-[0.8rem]",
                     row: "flex w-full mt-2",
                     cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-[#FF6B2C]",
-                    day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10",
-                    day_today: "bg-transparent border border-[#2A3142]",
+                    day: "h-9 w-9 p-0 font-normal text-white aria-selected:opacity-100 hover:bg-white/10 disabled:hover:bg-transparent",
+                    day_today: "bg-[#1A1E2E] text-white border-2 border-[#FF6B2C]",
                     day_selected:
                       "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
                     day_outside: "text-white/40 opacity-50",
-                    day_disabled: "text-white/40 opacity-50",
+                    day_disabled: "text-white/40 opacity-50 cursor-not-allowed",
                     day_range_middle: "aria-selected:bg-[#CC4400] aria-selected:text-white",
                     day_hidden: "invisible",
                   }}
