@@ -1,10 +1,11 @@
-'use client'
+"use client"
 
-import { EventDetails } from "@/types/event"
+import type { EventDetails } from "@/types/event"
 import { format, isValid } from "date-fns"
-import { CalendarDays, Clock, Users, LayoutTemplate, ImageIcon } from 'lucide-react'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { CalendarDays, Clock, Users, LayoutTemplate, ImageIcon } from "lucide-react"
+import Image from "next/image"
+import { useEffect, useState } from "react"
+import { getContrastColor } from "@/lib/utils/color"
 
 interface EventPreviewProps {
   event: Partial<EventDetails>
@@ -45,8 +46,8 @@ export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-r from-gray-300 to-white flex items-center justify-center">
-              <ImageIcon className="w-16 h-16 text-gray-500" />
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-gray-700 to-gray-900">
+              <ImageIcon className="w-16 h-16 text-white/40" />
             </div>
           )}
         </div>
@@ -54,13 +55,17 @@ export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
         {/* Content Container with Padding */}
         <div className="max-w-[1400px] mx-auto px-6 relative -mt-16 pb-8">
           {/* Event Details Panel */}
-          <div className="bg-[#0076BE] rounded-lg shadow-lg overflow-hidden">
+          <div
+            className="rounded-lg shadow-lg overflow-hidden"
+            style={{
+              backgroundColor: event.backgroundColor || "#0076BE",
+              color: getContrastColor(event.backgroundColor || "#0076BE"),
+            }}
+          >
             <div className="p-6">
               {/* Event Title and Description */}
               <div className="mb-8">
-                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                  {event.eventName || "Event Title"}
-                </h1>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">{event.eventName || "Event Title"}</h1>
               </div>
 
               {/* Event Information Grid */}
@@ -68,25 +73,21 @@ export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
                 {/* Date and Time Column */}
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <CalendarDays className="h-5 w-5 text-white" />
+                    <CalendarDays className="h-5 w-5" />
                     <div>
-                      <div className="text-sm text-white/80">Event date</div>
-                      <div className="text-white">
+                      <div className="text-sm opacity-80">Event date</div>
+                      <div>
                         {event.eventDate && isValid(new Date(event.eventDate))
-                          ? format(new Date(event.eventDate), 'EEEE, d MMMM yyyy')
+                          ? format(new Date(event.eventDate), "EEEE, d MMMM yyyy")
                           : "-"}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Clock className="h-5 w-5 text-white" />
+                    <Clock className="h-5 w-5" />
                     <div>
-                      <div className="text-sm text-white/80">Time</div>
-                      <div className="text-white">
-                        {event.startTime && event.endTime 
-                          ? `${event.startTime} - ${event.endTime} uur`
-                          : "-"}
-                      </div>
+                      <div className="text-sm opacity-80">Time</div>
+                      <div>{event.startTime && event.endTime ? `${event.startTime} - ${event.endTime} uur` : "-"}</div>
                     </div>
                   </div>
                 </div>
@@ -94,23 +95,23 @@ export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
                 {/* Registration Period Column */}
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <CalendarDays className="h-5 w-5 text-white" />
+                    <CalendarDays className="h-5 w-5" />
                     <div>
-                      <div className="text-sm text-white/80">Registration opens</div>
-                      <div className="text-white">
+                      <div className="text-sm opacity-80">Registration opens</div>
+                      <div>
                         {event.registrationStart && isValid(new Date(event.registrationStart))
-                          ? format(new Date(event.registrationStart), 'EEEE, d MMMM yyyy')
+                          ? format(new Date(event.registrationStart), "EEEE, d MMMM yyyy")
                           : "-"}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <CalendarDays className="h-5 w-5 text-white" />
+                    <CalendarDays className="h-5 w-5" />
                     <div>
-                      <div className="text-sm text-white/80">Registration closes</div>
-                      <div className="text-white">
+                      <div className="text-sm opacity-80">Registration closes</div>
+                      <div>
                         {event.registrationEnd && isValid(new Date(event.registrationEnd))
-                          ? format(new Date(event.registrationEnd), 'EEEE, d MMMM yyyy')
+                          ? format(new Date(event.registrationEnd), "EEEE, d MMMM yyyy")
                           : "-"}
                       </div>
                     </div>
@@ -120,17 +121,17 @@ export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
                 {/* Registration Stats Column */}
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <Users className="h-5 w-5 text-white" />
+                    <Users className="h-5 w-5" />
                     <div>
-                      <div className="text-sm text-white/80">Confirmed registrations</div>
-                      <div className="text-white">0</div>
+                      <div className="text-sm opacity-80">Confirmed registrations</div>
+                      <div>0</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Users className="h-5 w-5 text-white" />
+                    <Users className="h-5 w-5" />
                     <div>
-                      <div className="text-sm text-white/80">Total invitations</div>
-                      <div className="text-white">{event.maxInvitations || 2500}</div>
+                      <div className="text-sm opacity-80">Total invitations</div>
+                      <div>{event.maxInvitations || 2500}</div>
                     </div>
                   </div>
                 </div>
