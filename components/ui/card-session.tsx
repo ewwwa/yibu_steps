@@ -7,20 +7,6 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Session } from "@/types/session"
 import { Input } from "@/components/ui/input"
 import { Pencil } from "lucide-react"
-;<style jsx global>{`
-  @keyframes pulseOrange {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(255, 107, 44, 0.4);
-    }
-    50% {
-      box-shadow: 0 0 0 10px rgba(255, 107, 44, 0);
-    }
-  }
-
-  .animate-pulse-orange {
-    animation: pulseOrange 1s ease-in-out;
-  }
-`}</style>
 
 interface CardSessionProps extends React.HTMLAttributes<HTMLDivElement> {
   currentSession: Partial<Session>
@@ -30,7 +16,6 @@ interface CardSessionProps extends React.HTMLAttributes<HTMLDivElement> {
   onTitleChange: (newTitle: string) => void
   isNewSession?: boolean
   isSelected?: boolean
-  shouldAnimate?: boolean
 }
 
 export function CardSession({
@@ -95,9 +80,6 @@ export function CardSession({
                   onKeyDown={handleKeyDown}
                   placeholder={currentSession.title || "Session 01"}
                   className="bg-[#1A1E2E] text-white w-full rounded-none pl-3 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                  style={{
-                    width: `${Math.max(title.length * 1.2, 1)}ch`,
-                  }}
                 />
               </div>
             ) : (
