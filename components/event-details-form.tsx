@@ -1,31 +1,26 @@
-'use client'
+"use client"
+
+import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { EventDetails } from "@/types/event"
+import type { EventDetails } from "@/types/event"
 import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Upload } from 'lucide-react'
+import { Upload } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon } from 'lucide-react'
-import { EventPreview } from './event-preview'
-import { Area } from 'react-easy-crop/types'
+import { CalendarIcon } from "lucide-react"
+import { EventPreview } from "./event-preview"
+import type { Area } from "react-easy-crop/types"
 
 const eventDetailsSchema = z.object({
   eventName: z.string().min(1, "Event name is required"),
@@ -43,17 +38,17 @@ const eventDetailsSchema = z.object({
 })
 
 interface EventDetailsFormProps {
-  onSubmit: (data: EventDetails) => void;
-  onChange: (data: Partial<EventDetails>) => void;
+  onSubmit: (data: EventDetails) => void
+  onChange: (data: Partial<EventDetails>) => void
 }
 
 export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFormProps) {
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [selectedStartHour, setSelectedStartHour] = useState("07");
-  const [selectedStartMinute, setSelectedStartMinute] = useState("00");
-  const [selectedEndHour, setSelectedEndHour] = useState("19");
-  const [selectedEndMinute, setSelectedEndMinute] = useState("00");
-  const [timeError, setTimeError] = useState<string | null>(null);
+  const [isFormValid, setIsFormValid] = useState(false)
+  const [selectedStartHour, setSelectedStartHour] = useState("07")
+  const [selectedStartMinute, setSelectedStartMinute] = useState("00")
+  const [selectedEndHour, setSelectedEndHour] = useState("19")
+  const [selectedEndMinute, setSelectedEndMinute] = useState("00")
+  const [timeError, setTimeError] = useState<string | null>(null)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
 
   const form = useForm<EventDetails>({
@@ -86,124 +81,130 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
 
   useEffect(() => {
     const subscription = form.watch((value) => {
-      onChange(value as Partial<EventDetails>);
-      const isFormValid = Object.keys(eventDetailsSchema.shape).every(
-        (key) => value[key as keyof EventDetails]
-      );
-      setIsFormValid(isFormValid);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, onChange]);
+      onChange(value as Partial<EventDetails>)
+      const isFormValid = Object.keys(eventDetailsSchema.shape).every((key) => value[key as keyof EventDetails])
+      setIsFormValid(isFormValid)
+    })
+    return () => subscription.unsubscribe()
+  }, [form, onChange])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const startTimePanel = document.getElementById('startTimePanel');
-      const endTimePanel = document.getElementById('endTimePanel');
-      const startTimeInput = document.getElementById('startTimeInput');
-      const endTimeInput = document.getElementById('endTimeInput');
+      const startTimePanel = document.getElementById("startTimePanel")
+      const endTimePanel = document.getElementById("endTimePanel")
+      const startTimeInput = document.getElementById("startTimeInput")
+      const endTimeInput = document.getElementById("endTimeInput")
 
-      if (startTimePanel && !startTimePanel.contains(event.target as Node) && 
-          startTimeInput && !startTimeInput.contains(event.target as Node)) {
-        startTimePanel.classList.add('hidden');
+      if (
+        startTimePanel &&
+        !startTimePanel.contains(event.target as Node) &&
+        startTimeInput &&
+        !startTimeInput.contains(event.target as Node)
+      ) {
+        startTimePanel.classList.add("hidden")
       }
-      if (endTimePanel && !endTimePanel.contains(event.target as Node) && 
-          endTimeInput && !endTimeInput.contains(event.target as Node)) {
-        endTimePanel.classList.add('hidden');
+      if (
+        endTimePanel &&
+        !endTimePanel.contains(event.target as Node) &&
+        endTimeInput &&
+        !endTimeInput.contains(event.target as Node)
+      ) {
+        endTimePanel.classList.add("hidden")
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const generateHourOptions = () => {
     return [
-      Array.from({ length: 6 }, (_, i) => (i + 7).toString().padStart(2, '0')),
-      Array.from({ length: 6 }, (_, i) => (i + 13).toString().padStart(2, '0')),
-      Array.from({ length: 6 }, (_, i) => ((i + 19) % 24).toString().padStart(2, '0'))
-    ];
-  };
+      Array.from({ length: 6 }, (_, i) => (i + 7).toString().padStart(2, "0")),
+      Array.from({ length: 6 }, (_, i) => (i + 13).toString().padStart(2, "0")),
+      Array.from({ length: 6 }, (_, i) => ((i + 19) % 24).toString().padStart(2, "0")),
+    ]
+  }
 
   const generateMinuteOptions = () => {
-    return [0, 15, 30, 45].map(minute => ({
-      value: minute.toString().padStart(2, '0'),
-      label: minute.toString().padStart(2, '0')
-    }));
-  };
+    return [0, 15, 30, 45].map((minute) => ({
+      value: minute.toString().padStart(2, "0"),
+      label: minute.toString().padStart(2, "0"),
+    }))
+  }
 
   const validateTimes = (start: string, end: string) => {
-    const [startHour, startMinute] = start.split(':').map(Number);
-    const [endHour, endMinute] = end.split(':').map(Number);
-    
-    const startTimeInMinutes = startHour * 60 + startMinute;
-    const endTimeInMinutes = endHour * 60 + endMinute;
-    
+    const [startHour, startMinute] = start.split(":").map(Number)
+    const [endHour, endMinute] = end.split(":").map(Number)
+
+    const startTimeInMinutes = startHour * 60 + startMinute
+    const endTimeInMinutes = endHour * 60 + endMinute
+
     // Check if end time is at least 15 minutes later than start time
     if (endTimeInMinutes <= startTimeInMinutes + 14) {
-      setTimeError("End time must be at least 15 minutes later than start time");
-      return false;
+      setTimeError("End time must be at least 15 minutes later than start time")
+      return false
     }
-    
-    setTimeError(null);
-    return true;
-  };
+
+    setTimeError(null)
+    return true
+  }
 
   const handleStartTimeChange = (newTime: string) => {
-    const [newHour, newMinute] = newTime.split(':').map(Number);
-    const currentEndTime = `${selectedEndHour}:${selectedEndMinute}`;
-    
+    const [newHour, newMinute] = newTime.split(":").map(Number)
+    const currentEndTime = `${selectedEndHour}:${selectedEndMinute}`
+
     // If the new start time makes the current end time invalid
     if (!validateTimes(newTime, currentEndTime)) {
       // Set end time to start time + 15 minutes
-      const newEndTimeInMinutes = newHour * 60 + newMinute + 15;
-      const newEndHour = Math.floor(newEndTimeInMinutes / 60) % 24;
-      const newEndMinute = newEndTimeInMinutes % 60;
-      
-      setSelectedEndHour(newEndHour.toString().padStart(2, '0'));
-      setSelectedEndMinute(newEndMinute.toString().padStart(2, '0'));
-      form.setValue('endTime', `${newEndHour.toString().padStart(2, '0')}:${newEndMinute.toString().padStart(2, '0')}`);
+      const newEndTimeInMinutes = newHour * 60 + newMinute + 15
+      const newEndHour = Math.floor(newEndTimeInMinutes / 60) % 24
+      const newEndMinute = newEndTimeInMinutes % 60
+
+      setSelectedEndHour(newEndHour.toString().padStart(2, "0"))
+      setSelectedEndMinute(newEndMinute.toString().padStart(2, "0"))
+      form.setValue("endTime", `${newEndHour.toString().padStart(2, "0")}:${newEndMinute.toString().padStart(2, "0")}`)
     }
-  };
+  }
 
   const handleStartHourClick = (hour: string) => {
-    const newStartTime = `${hour}:${selectedStartMinute}`;
-    setSelectedStartHour(hour);
-    form.setValue('startTime', newStartTime);
-    handleStartTimeChange(newStartTime);
-  };
+    const newStartTime = `${hour}:${selectedStartMinute}`
+    setSelectedStartHour(hour)
+    form.setValue("startTime", newStartTime)
+    handleStartTimeChange(newStartTime)
+  }
 
   const handleStartMinuteClick = (minute: string) => {
-    const newStartTime = `${selectedStartHour}:${minute}`;
-    setSelectedStartMinute(minute);
-    form.setValue('startTime', newStartTime);
-    handleStartTimeChange(newStartTime);
-  };
+    const newStartTime = `${selectedStartHour}:${minute}`
+    setSelectedStartMinute(minute)
+    form.setValue("startTime", newStartTime)
+    handleStartTimeChange(newStartTime)
+  }
 
   const handleEndHourClick = (hour: string) => {
-    const newEndTime = `${hour}:${selectedEndMinute}`;
+    const newEndTime = `${hour}:${selectedEndMinute}`
     if (!validateTimes(`${selectedStartHour}:${selectedStartMinute}`, newEndTime)) {
-      return; // Don't update if it would create an invalid state
+      return // Don't update if it would create an invalid state
     }
-    setSelectedEndHour(hour);
-    form.setValue('endTime', newEndTime);
-  };
+    setSelectedEndHour(hour)
+    form.setValue("endTime", newEndTime)
+  }
 
   const handleEndMinuteClick = (minute: string) => {
-    const newEndTime = `${selectedEndHour}:${minute}`;
+    const newEndTime = `${selectedEndHour}:${minute}`
     if (!validateTimes(`${selectedStartHour}:${selectedStartMinute}`, newEndTime)) {
-      return; // Don't update if it would create an invalid state
+      return // Don't update if it would create an invalid state
     }
-    setSelectedEndMinute(minute);
-    form.setValue('endTime', newEndTime);
-  };
+    setSelectedEndMinute(minute)
+    form.setValue("endTime", newEndTime)
+  }
 
   const handleSubmit = (data: EventDetails) => {
     if (isFormValid && validateTimes(data.startTime, data.endTime)) {
-      onSubmit(data);
+      onSubmit(data)
     }
-  };
+  }
 
   const handleCropComplete = (croppedArea: Area) => {
     setCroppedAreaPixels(croppedArea)
@@ -214,10 +215,7 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
       <Card className="bg-[#2A3142] rounded-lg shadow-none">
         <CardContent className="pt-6 pb-6 px-6">
           <Form {...form}>
-            <form 
-              onSubmit={form.handleSubmit(handleSubmit)} 
-              className="space-y-6"
-            >
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
               {/* Event Details Card */}
               <Card className="bg-[#2A3142] border border-white/5 mb-6 shadow-none rounded-lg">
                 <CardHeader>
@@ -231,10 +229,10 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                       <FormItem>
                         <FormLabel className="text-white font-semibold">Event Name</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="Enter event name" 
+                          <Input
+                            placeholder="Enter event name"
                             className="bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40"
-                            {...field} 
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -249,10 +247,10 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                       <FormItem>
                         <FormLabel className="text-white font-semibold">Description</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="Enter event description" 
+                          <Textarea
+                            placeholder="Enter event description"
                             className="min-h-[100px] bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40"
-                            {...field} 
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -282,7 +280,7 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                   variant="outline"
                                   className={cn(
                                     "w-full pl-3 text-left font-normal bg-[#1A1E2E] border-white/10 text-white hover:bg-[#1A1E2E] hover:text-white h-10",
-                                    !field.value && "text-white/40"
+                                    !field.value && "text-white/40",
                                   )}
                                 >
                                   {field.value ? format(field.value, "dd/MM/yy") : <span>Pick a date</span>}
@@ -295,15 +293,13 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                 mode="single"
                                 selected={field.value}
                                 onSelect={(date) => {
-                                  field.onChange(date);
-                                  const popoverTrigger = document.querySelector('[data-state="open"]');
+                                  field.onChange(date)
+                                  const popoverTrigger = document.querySelector('[data-state="open"]')
                                   if (popoverTrigger) {
-                                    (popoverTrigger as HTMLElement).click();
+                                    ;(popoverTrigger as HTMLElement).click()
                                   }
                                 }}
-                                disabled={(date) =>
-                                  date < new Date() || date < new Date("1900-01-01")
-                                }
+                                disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                                 initialFocus
                                 className="rounded-md border-0 bg-[#1A1E2E]"
                                 classNames={{
@@ -317,11 +313,13 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                   nav_button_next: "absolute right-1",
                                   table: "w-full border-collapse space-y-1",
                                   head_row: "flex",
-                                  head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] text-white",
+                                  head_cell:
+                                    "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] text-white",
                                   row: "flex w-full mt-2",
                                   cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
                                   day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-white",
-                                  day_selected: "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
+                                  day_selected:
+                                    "bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] hover:text-white focus:bg-[#FF6B2C] focus:text-white",
                                   day_today: "bg-accent text-accent-foreground",
                                   day_outside: "text-muted-foreground opacity-50",
                                   day_disabled: "text-muted-foreground opacity-50",
@@ -355,17 +353,17 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                   className="bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40"
                                   value={`${selectedStartHour}:${selectedStartMinute}`}
                                   onClick={(e) => {
-                                    e.preventDefault();
-                                    document.getElementById('startTimePanel')?.classList.remove('hidden');
+                                    e.preventDefault()
+                                    document.getElementById("startTimePanel")?.classList.remove("hidden")
                                   }}
                                   onChange={(value) => {
-                                    field.onChange(value);
-                                    handleStartTimeChange(value);
+                                    field.onChange(value)
+                                    handleStartTimeChange(value)
                                   }}
                                   readOnly
                                 />
-                                <div 
-                                  id="startTimePanel" 
+                                <div
+                                  id="startTimePanel"
                                   className="absolute top-full left-0 mt-1 bg-[#1A1E2E] border border-white/10 rounded-md p-4 hidden z-50 min-w-[320px]"
                                 >
                                   <div className="flex flex-col">
@@ -382,11 +380,11 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                                 key={`start-hour-${hour}`}
                                                 className={cn(
                                                   "w-12 h-8 text-center text-white hover:bg-white/10 rounded",
-                                                  selectedStartHour === hour && "bg-[#FF6B2C] text-white"
+                                                  selectedStartHour === hour && "bg-[#FF6B2C] text-white",
                                                 )}
                                                 onClick={(e) => {
-                                                  e.preventDefault();
-                                                  handleStartHourClick(hour);
+                                                  e.preventDefault()
+                                                  handleStartHourClick(hour)
                                                 }}
                                               >
                                                 {hour}
@@ -401,11 +399,11 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                             key={`start-minute-${minute.value}`}
                                             className={cn(
                                               "w-12 h-8 text-center text-white hover:bg-white/10 rounded block mb-2",
-                                              selectedStartMinute === minute.value && "bg-[#FF6B2C] text-white"
+                                              selectedStartMinute === minute.value && "bg-[#FF6B2C] text-white",
                                             )}
                                             onClick={(e) => {
-                                              e.preventDefault();
-                                              handleStartMinuteClick(minute.value);
+                                              e.preventDefault()
+                                              handleStartMinuteClick(minute.value)
                                             }}
                                           >
                                             {minute.label}
@@ -435,21 +433,21 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                   placeholder="Select end time"
                                   className={cn(
                                     "bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40",
-                                    timeError && "border-[#FF6B2C] focus-visible:ring-[#FF6B2C]"
+                                    timeError && "border-[#FF6B2C] focus-visible:ring-[#FF6B2C]",
                                   )}
                                   value={`${selectedEndHour}:${selectedEndMinute}`}
                                   onClick={(e) => {
-                                    e.preventDefault();
-                                    document.getElementById('endTimePanel')?.classList.remove('hidden');
+                                    e.preventDefault()
+                                    document.getElementById("endTimePanel")?.classList.remove("hidden")
                                   }}
                                   onChange={(value) => {
-                                    field.onChange(value);
-                                    validateTimes(form.getValues().startTime, value);
+                                    field.onChange(value)
+                                    validateTimes(form.getValues().startTime, value)
                                   }}
                                   readOnly
                                 />
-                                <div 
-                                  id="endTimePanel" 
+                                <div
+                                  id="endTimePanel"
                                   className="absolute top-full left-0 mt-1 bg-[#1A1E2E] border border-white/10 rounded-md p-4 hidden z-50 min-w-[320px]"
                                 >
                                   <div className="flex flex-col">
@@ -466,11 +464,11 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                                 key={`end-hour-${hour}`}
                                                 className={cn(
                                                   "w-12 h-8 text-center text-white hover:bg-white/10 rounded",
-                                                  selectedEndHour === hour && "bg-[#FF6B2C] text-white"
+                                                  selectedEndHour === hour && "bg-[#FF6B2C] text-white",
                                                 )}
                                                 onClick={(e) => {
-                                                  e.preventDefault();
-                                                  handleEndHourClick(hour);
+                                                  e.preventDefault()
+                                                  handleEndHourClick(hour)
                                                 }}
                                               >
                                                 {hour}
@@ -485,11 +483,11 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                             key={`end-minute-${minute.value}`}
                                             className={cn(
                                               "w-12 h-8 text-center text-white hover:bg-white/10 rounded block mb-2",
-                                              selectedEndMinute === minute.value && "bg-[#FF6B2C] text-white"
+                                              selectedEndMinute === minute.value && "bg-[#FF6B2C] text-white",
                                             )}
                                             onClick={(e) => {
-                                              e.preventDefault();
-                                              handleEndMinuteClick(minute.value);
+                                              e.preventDefault()
+                                              handleEndMinuteClick(minute.value)
                                             }}
                                           >
                                             {minute.label}
@@ -506,9 +504,7 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                         )}
                       />
                     </div>
-                    {timeError && (
-                      <p className="text-[#FF6B2C] text-sm">{timeError}</p>
-                    )}
+                    {timeError && <p className="text-[#FF6B2C] text-sm">{timeError}</p>}
                   </div>
                 </CardContent>
               </Card>
@@ -526,27 +522,28 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                       <FormItem>
                         <FormLabel className="text-white font-semibold">Location</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="Enter event location" 
+                          <Input
+                            placeholder="Enter event location"
                             className="bg-[#1A1E2E] border-white/10 text-white placeholder:text-white/40"
-                            {...field} 
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
-                      </FormItem>)}
+                      </FormItem>
+                    )}
                   />
 
                   <FormField
                     control={form.control}
                     name="maxInvitations"
-                    render={({ field: { onChange, ...field }}) => (
+                    render={({ field: { onChange, ...field } }) => (
                       <FormItem>
                         <FormLabel className="text-white font-semibold">Maximum Invitations</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             className="bg-[#1A1E2E] border-white/10 text-white"
-                            onChange={e => onChange(parseInt(e.target.value))}
+                            onChange={(e) => onChange(Number.parseInt(e.target.value))}
                             {...field}
                           />
                         </FormControl>
@@ -577,21 +574,14 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                                 onChange={handleFileUpload}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                               />
-                              <Button
-                                type="button"
-                                className="bg-[#1A1E2E] text-white hover:bg-[#2A3142]"
-                              >
+                              <Button type="button" className="bg-[#1A1E2E] text-white hover:bg-[#2A3142]">
                                 <Upload className="h-4 w-4 mr-2" />
                                 Upload Image
                               </Button>
                             </div>
                             {field.value && (
                               <div className="mt-4">
-                                <img
-                                  src={field.value}
-                                  alt="Background Preview"
-                                  className="max-w-full h-auto rounded"
-                                />
+                                <img src={field.value} alt="Background Preview" className="max-w-full h-auto rounded" />
                               </div>
                             )}
                           </div>
@@ -603,8 +593,8 @@ export default function EventDetailsForm({ onSubmit, onChange }: EventDetailsFor
                 </CardContent>
               </Card>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-[#FF6B2C] hover:bg-[#FF8B3C] text-white rounded-lg"
                 disabled={!form.formState.isValid}
               >

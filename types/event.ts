@@ -10,8 +10,8 @@ export interface EventDetails {
   eventDate: Date
   startTime: string
   endTime: string
-  registrationStart: Date
-  registrationEnd?: Date
+  registrationStart: Date | undefined
+  registrationEnd: Date | undefined
   location: string
   description?: string
   backgroundImage?: string

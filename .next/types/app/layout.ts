@@ -1,4 +1,4 @@
-// File: /Users/evaanguita/Development/step-plan/app/layout.tsx
+// File: /Users/evaanguita/Development/yibu_steps/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

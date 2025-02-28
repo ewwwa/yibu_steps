@@ -5,15 +5,17 @@ import { format, isValid } from "date-fns"
 import { CalendarDays, Clock, Users, LayoutTemplate, ImageIcon } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { getContrastColor } from "@/lib/utils/color"
+import { generateEventColors } from "@/lib/utils/color"
 
 interface EventPreviewProps {
   event: Partial<EventDetails>
   isFormTouched: boolean
+  onPreviewClick: () => void
 }
 
-export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
+export function EventPreview({ event, isFormTouched, onPreviewClick }: EventPreviewProps) {
   const [mounted, setMounted] = useState(false)
+  const colors = event.backgroundColor ? generateEventColors(event.backgroundColor) : generateEventColors("#0076BE")
 
   useEffect(() => {
     setMounted(true)
@@ -25,115 +27,144 @@ export function EventPreview({ event, isFormTouched }: EventPreviewProps) {
 
   if (!isFormTouched) {
     return (
-      <div className="w-full h-[300px] bg-[#2A3142] rounded-lg shadow-lg flex flex-col items-center justify-center overflow-hidden">
-        <LayoutTemplate className="w-12 h-12 text-white/40 mb-4" />
-        <p className="text-white/40 text-lg">Fill the form to preview your event</p>
+      <div className="w-full bg-[#1A1E2E] rounded-lg shadow-lg overflow-hidden">
+        <div className="h-[300px] flex items-center justify-center bg-[#2A3142]">
+          <div className="text-center">
+            <LayoutTemplate className="w-12 h-12 text-white/40 mx-auto" />
+            <p className="text-white/40 text-lg text-center px-4 mt-4">Fill the form to preview your event</p>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="w-full">
-      {/* Full width container */}
-      <div className="w-full bg-[#1A1E2E]">
-        {/* Hero Image Section - Full Width */}
-        <div className="relative w-full h-[300px]">
-          {event.backgroundImage ? (
-            <Image
-              src={event.backgroundImage || "/placeholder.svg"}
-              alt="Event background"
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-gray-700 to-gray-900">
-              <ImageIcon className="w-16 h-16 text-white/40" />
-            </div>
-          )}
+    <div className="w-full bg-[#1A1E2E] rounded-lg shadow-lg overflow-hidden cursor-default" onClick={onPreviewClick}>
+      {/* Background Image Section */}
+      <div className="relative w-full h-[300px]">
+        {event.backgroundImage ? (
+          <Image
+            src={event.backgroundImage || "/placeholder.svg"}
+            alt="Event background"
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
+            <ImageIcon className="w-16 h-16 text-white/40" />
+          </div>
+        )}
+      </div>
+
+      {/* Content Container - Add this wrapper div */}
+      <div className="w-[95%] mx-auto -mt-6 relative z-10 rounded-lg overflow-hidden">
+        {/* Title Section */}
+        <div
+          className="p-6"
+          style={{
+            backgroundColor: colors.primary,
+            color: colors.text,
+          }}
+        >
+          <h1 className="text-2xl md:text-4xl font-bold">{event.eventName || "Event Title"}</h1>
         </div>
 
-        {/* Content Container with Padding */}
-        <div className="max-w-[1400px] mx-auto px-6 relative -mt-16 pb-8">
-          {/* Event Details Panel */}
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 relative">
+          {/* Main Info Section - 2 columns layout */}
           <div
-            className="rounded-lg shadow-lg overflow-hidden"
+            className="col-span-full md:col-span-9 grid grid-cols-2 gap-0 relative z-10"
             style={{
-              backgroundColor: event.backgroundColor || "#0076BE",
-              color: getContrastColor(event.backgroundColor || "#0076BE"),
+              backgroundColor: colors.secondary,
+              color: colors.text,
             }}
           >
-            <div className="p-6">
-              {/* Event Title and Description */}
-              <div className="mb-8">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{event.eventName || "Event Title"}</h1>
+            {/* Left Column */}
+            <div className="space-y-6 p-6 border-r border-black/10">
+              {/* Event Date */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs md:text-sm" style={{ color: colors.textMuted }}>
+                  <CalendarDays className="h-4 w-4" />
+                  Event date
+                </div>
+                <div className="text-base md:text-lg">
+                  {event.eventDate && isValid(new Date(event.eventDate))
+                    ? format(new Date(event.eventDate), "EEEE, MMMM d, yyyy")
+                    : "-"}
+                </div>
               </div>
 
-              {/* Event Information Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Date and Time Column */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CalendarDays className="h-5 w-5" />
-                    <div>
-                      <div className="text-sm opacity-80">Event date</div>
-                      <div>
-                        {event.eventDate && isValid(new Date(event.eventDate))
-                          ? format(new Date(event.eventDate), "EEEE, d MMMM yyyy")
-                          : "-"}
-                      </div>
-                    </div>
+              {/* Registration Section */}
+              <div className="space-y-4">
+                {/* Registration Opens */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs md:text-sm" style={{ color: colors.textMuted }}>
+                    <CalendarDays className="h-4 w-4" />
+                    Registration opens
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Clock className="h-5 w-5" />
-                    <div>
-                      <div className="text-sm opacity-80">Time</div>
-                      <div>{event.startTime && event.endTime ? `${event.startTime} - ${event.endTime} uur` : "-"}</div>
-                    </div>
+                  <div className="text-base md:text-lg">
+                    {event.registrationStart && isValid(new Date(event.registrationStart))
+                      ? format(new Date(event.registrationStart), "EEEE, MMMM d, yyyy")
+                      : "-"}
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* Registration Period Column */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CalendarDays className="h-5 w-5" />
-                    <div>
-                      <div className="text-sm opacity-80">Registration opens</div>
-                      <div>
-                        {event.registrationStart && isValid(new Date(event.registrationStart))
-                          ? format(new Date(event.registrationStart), "EEEE, d MMMM yyyy")
-                          : "-"}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CalendarDays className="h-5 w-5" />
-                    <div>
-                      <div className="text-sm opacity-80">Registration closes</div>
-                      <div>
-                        {event.registrationEnd && isValid(new Date(event.registrationEnd))
-                          ? format(new Date(event.registrationEnd), "EEEE, d MMMM yyyy")
-                          : "-"}
-                      </div>
-                    </div>
-                  </div>
+            {/* Right Column */}
+            <div className="p-6 space-y-6">
+              {/* Time Section */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs md:text-sm" style={{ color: colors.textMuted }}>
+                  <Clock className="h-4 w-4" />
+                  Time
                 </div>
+                <div className="text-base md:text-lg">
+                  {event.startTime && event.endTime ? `${event.startTime} to ${event.endTime}` : "-"}
+                </div>
+              </div>
 
-                {/* Registration Stats Column */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <Users className="h-5 w-5" />
-                    <div>
-                      <div className="text-sm opacity-80">Confirmed registrations</div>
-                      <div>0</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Users className="h-5 w-5" />
-                    <div>
-                      <div className="text-sm opacity-80">Total invitations</div>
-                      <div>{event.maxInvitations || 2500}</div>
-                    </div>
-                  </div>
+              {/* Registration Closes */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs md:text-sm" style={{ color: colors.textMuted }}>
+                  <CalendarDays className="h-4 w-4" />
+                  Registration closes
+                </div>
+                <div className="text-base md:text-lg">
+                  {event.registrationEnd && isValid(new Date(event.registrationEnd))
+                    ? format(new Date(event.registrationEnd), "EEEE, MMMM d, yyyy")
+                    : "-"}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Statistics Section */}
+          <div
+            className="col-span-full md:col-span-3 grid grid-cols-1 gap-0"
+            style={{
+              backgroundColor: colors.tertiary,
+              color: colors.text,
+            }}
+          >
+            <div className="p-6 space-y-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  <span className="text-xl md:text-2xl font-semibold">1150</span>
+                </div>
+                <div className="text-sm" style={{ color: colors.textMuted }}>
+                  Confirmed registrations
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  <span className="text-xl md:text-2xl font-semibold">{event.maxInvitations || 2500}</span>
+                </div>
+                <div className="text-sm" style={{ color: colors.textMuted }}>
+                  Total invitations
                 </div>
               </div>
             </div>
