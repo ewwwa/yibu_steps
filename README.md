@@ -5,11 +5,15 @@ This repository contains the Yibu Steps project with calendar functionality.
 ## Deployments
 
 ### Main Project
-<a href="https://yibu-steps.vercel.app/" target="_blank">Yibu Steps Project</a>
+[Yibu Steps Project](https://yibu-steps.vercel.app/)
 
 ### Calendar Branch
-<a href="https://yibu-steps-git-calendar-ewwwas-projects.vercel.app/" target="_blank">Calendar Implementation</a>
+[Calendar Implementation](https://yibu-steps-git-calendar-ewwwas-projects.vercel.app/)
 
 ## About
 
 The calendar branch contains fixes and improvements to the event planning functionality.
+
+---
+
+**Note:** To open links in new tabs, right-click on the links and select "Open in new tab"
