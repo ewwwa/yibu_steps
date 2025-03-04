@@ -10,12 +10,11 @@ export interface EventDetails {
   eventDate: Date
   startTime: string
   endTime: string
-  registrationStart: Date | undefined
-  registrationEnd: Date | undefined
+  registrationStart: Date
+  registrationEnd?: Date
   location: string
   description?: string
   backgroundImage?: string
-  backgroundColor?: string // Added this line
   maxInvitations: number
 }
 

@@ -1,9 +1,5 @@
-import { cn } from "@/lib/utils"
-import "./globals.css"
 import type React from "react"
-import { Suspense } from "react"
-import Loading from "./loading"
-import { Toaster } from "@/components/ui/toaster"
+import "./globals.css"
 
 export default function RootLayout({
   children,
@@ -11,11 +7,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={cn("min-h-screen bg-[#111827] text-white antialiased")}>
-        <Suspense fallback={<Loading />}>{children}</Suspense>
-        <Toaster />
-      </body>
+    <html lang="en">
+      <body className="min-h-screen bg-[#1A1E2E] text-white antialiased">{children}</body>
     </html>
   )
 }
