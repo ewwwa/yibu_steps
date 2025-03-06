@@ -1,6 +1,6 @@
 # Yibu Steps Project
 
-This repository contains the Yibu Steps project with calendar functionality.
+This repository contains the Event planner project, with a branch with the calendar functionality.
 
 ## Deployments
 
